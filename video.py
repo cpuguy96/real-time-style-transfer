@@ -53,41 +53,36 @@ def _transform(in_image,loaded,m_path):
 
 if __name__ == '__main__':
     cv2.namedWindow("style")
-    cv2.namedWindow("mask")
     vc = cv2.VideoCapture(CAMERA_ID)
     vc.set(cv2.CAP_PROP_FRAME_WIDTH,WIDTH)
     vc.set(cv2.CAP_PROP_FRAME_HEIGHT,HEIGHT)
-    fgbg = cv2.createBackgroundSubtractorMOG2()
     if vc.isOpened():
         rval, frame = vc.read()
-        mask = fgbg.apply(frame)
         loaded = False
-        mpath = 'models/cubist.model'
+        mpath = 'models/edtaonisl.model'
     else:
         rval = False
     while rval:
         cv2.imshow("style", frame)
-        cv2.imshow("mask", mask)
         rval, frame = vc.read()
         
-        mask = fgbg.apply(frame)
         start = time.time()
         frame = cv2.resize( _transform(frame,loaded,mpath), (0,0), fx=1.0, fy=1.0)
         print(time.time() - start, 'sec')
-
+        
         loaded=True
         key = cv2.waitKey(1)
         if key == 49: # 1
-            mpath='models/cubist.model'
+            mpath='models/edtaonisl.model'
             loaded=False
         if key == 50: # 2
-            mpath='models/edtaonisl.model'
+            mpath='models/natasha-russu.model'
             loaded=False
         if key == 51: # 3
             mpath='models/kandinsky_e2_crop512.model'
             loaded=False
         if key == 52: # 4
-            mpath='models/starrynight.model'
+            mpath='models/composition.model'
             loaded=False
         if key == 53: # 5
             mpath='models/scream-style.model'
@@ -104,6 +99,8 @@ if __name__ == '__main__':
         if key == 57: # 9
             mpath='none'
             loaded=False
+        if 'c' == chr(key & 0xFF):
+            KEEP_COLORS = not KEEP_COLORS
         if 'q' == chr(key & 0xFF):
             break
         #if cv2.waitKey(1) & 0xFF == ord('q'):
